@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChitChat - Login & Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    body {
+  background: #030712;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+    
+    /* Container Card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(6, 20, 15, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      border-radius: 20px;
+      padding: 35px 28px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 35px rgba(16, 185, 129, 0.2);
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    h2 {
+      color: #34d399;
+      font-size: 30px;
+      margin-bottom: 6px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+    }
+
+    p.subtitle {
+      color: #a7f3d0;
+      font-size: 15px;
+      margin-bottom: 24px;
+      opacity: 0.85;
+      font-style: italic;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #6ee7b7;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(52, 211, 153, 0.4);
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: all 0.3s ease;
+      background-color: rgba(2, 44, 34, 0.6);
+      color: #ecfdf5;
+    }
+
+    input::placeholder { color: #047857; }
+
+    input:focus, select:focus {
+      border-color: #34d399;
+      box-shadow: 0 0 12px rgba(52, 211, 153, 0.4);
+      background-color: rgba(2, 44, 34, 0.85);
+    }
+
+    select option {
+      background-color: #064e3b;
+      color: #ecfdf5;
+    }
+
+    .phone-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .phone-group select { width: 42%; cursor: pointer; }
+    .phone-group input { width: 58%; }
+
+    .password-wrapper { position: relative; }
+    .password-wrapper input { padding-right: 44px; }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #34d399;
+    }
+
+    .toggle-password svg {
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+      color: #022c22;
+      margin-top: 10px;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      box-shadow: 0 0 28px rgba(52, 211, 153, 0.6);
+    }
+
+    .btn-secondary {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #f87171;
+      margin-top: 25px;
+    }
+
+    .switch-text {
+      text-align: center;
+      margin-top: 22px;
+      font-size: 15px;
+      color: #a7f3d0;
+    }
+
+    .switch-text a {
+      color: #34d399;
+      font-weight: 900;
+      text-decoration: underline;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    /* DASHBOARD SPECIFIC STYLES */
+    .profile-card { text-align: center; }
+    .profile-image {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #34d399;
+      box-shadow: 0 0 25px rgba(52, 211, 153, 0.5);
+      cursor: pointer;
+    }
+
+    .add-profile {
+      margin-top: 12px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #059669, #34d399);
+      color: #022c22;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .username { margin-top: 15px; color: #34d399; font-size: 26px; }
+    .phone { margin-top: 6px; color: #d1fae5; font-size: 16px; }
+
+    .search-section { margin-top: 25px; }
+    .search-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      color: #022c22;
+      background: linear-gradient(135deg, #059669, #34d399);
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+    }
+
+    .result-area {
+      margin-top: 25px;
+      padding: 20px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(52,211,153,.2);
+      text-align: center;
+    }
+
+    .chat-title { color: #34d399; margin: 20px 0 10px; font-size: 22px; text-align: center; }
+    .chat-list { display: flex; flex-direction: column; gap: 10px; }
+    .chat-item {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(52,211,153,.25);
+      border-radius: 12px;
+      padding: 12px;
+      color: white;
+      cursor: pointer;
+    }
+
+    /* POPUPS & TOAST */
+    .popup-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .popup-overlay.active { opacity: 1; pointer-events: auto; }
+    .popup-card {
+      background: rgba(6, 26, 19, 0.95);
+      border: 2px solid #34d399;
+      border-radius: 20px;
+      padding: 30px 24px;
+      width: 90%; max-width: 360px;
+      text-align: center;
+      box-shadow: 0 0 45px rgba(52, 211, 153, 0.35);
+    }
+
+    .popup-card.error-border { border-color: #f87171; }
+    
+    .popup-title { 
+      font-size: 18px; 
+      font-weight: 900; 
+      color: #34d399; 
+      white-space: pre-line; /* <-- Required for line breaks (\n) */
+      line-height: 1.4;
+    }
+    
+    .error-border .popup-title { color: #f87171; }
+
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(52, 211, 153, 0.2);
+      border-top: 4px solid #34d399;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .toast {
+      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+      background: #10b981; color: white; padding: 12px 20px; border-radius: 30px;
+      opacity: 0; pointer-events: none; transition: .4s; z-index: 9999;
+    }
+    .toast.show { opacity: 1; bottom: 50px; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    
+    <!-- 1. LOGIN FORM -->
+    <div id="login-view" class="form-container">
+      <h2>WELCOME BACK</h2>
+      <p class="subtitle">Enter your credentials to enter the chat.</p>
+
+      <form onsubmit="handleLogin(event)" novalidate>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="enter email address">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="login-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">LOG IN</button>
+      </form>
+
+      <p class="switch-text">
+        Don't have an account? <a onclick="showRegister()">Register here</a>
+      </p>
+    </div>
+
+    <!-- 2. REGISTER FORM -->
+    <div id="register-view" class="form-container hidden">
+      <h2>CREATE ACCOUNT</h2>
+      <p class="subtitle">Fill in all your details to create your account.</p>
+
+      <form id="reg-form-element" onsubmit="handleRegister(event)" novalidate>
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" id="reg-username" placeholder="johndoe">
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="reg-email" placeholder="enter email address">
+        </div>
+
+        <div class="form-group">
+          <label>Mobile Phone Number</label>
+          <div class="phone-group">
+            <select id="reg-country-code">
+              <option value="+254">🇰🇪 +254 (KE)</option>
+              <option value="+1">🇺🇸 +1 (USA)</option>
+              <option value="+44">🇬🇧 +44 (UK)</option>
+              <option value="+91">🇮🇳 +91 (IN)</option>
+            </select>
+            <input type="tel" id="reg-phone" placeholder="712345678">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="reg-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reg-password', this)">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="password-wrapper">
+            <input type="password" id="reg-confirm-password" placeholder="••••••••">
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('reg-confirm-password', this)">
+              <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">CONFIRM & REGISTER</button>
+      </form>
+
+      <p class="switch-text">
+        Already have an account? <a onclick="showLogin()">Log in here</a>
+      </p>
+    </div>
+
+    <!-- 3. DASHBOARD VIEW -->
+    <div id="dashboard-view" class="form-container hidden">
+      <div class="profile-card">
+        <img src="https://via.placeholder.com/120" id="profileImage" class="profile-image" alt="Profile">
+        <br>
+        <button class="add-profile" id="addProfileBtn">Add Profile</button>
+        <h2 class="username" id="username">Loading...</h2>
+        <p class="phone" id="phoneNumber">Loading...</p>
+      </div>
+
+      <div class="search-section">
+        <button id="searchContactBtn" class="search-btn">🔍 Search Contact</button>
+      </div>
+
+      <div class="result-area" id="resultArea">
+        <h3 style="color:#34d399;">ChitChat</h3>
+        <p style="color:#d1fae5; font-size:14px; margin-top:5px;">Search for a contact to begin a private conversation.</p>
+      </div>
+
+      <h3 class="chat-title">Recent Chats</h3>
+      <div id="chatList" class="chat-list">
+        <p style="text-align:center; color:#b6e7d5;">No chats yet.</p>
+      </div>
+
+      <button onclick="handleLogout()" class="btn btn-secondary">LOG OUT</button>
+    </div>
+
+  </div>
+
+  <!-- SEARCH CONTACT POPUP -->
+  <div id="searchPopup" class="popup-overlay">
+    <div class="popup-card">
+      <h2 style="margin-bottom:15px;">Search Contact</h2>
+      <select id="countryCode">
+        <option value="+1">United States (+1)</option>
+        <option value="+254">Kenya (+254)</option>
+        <option value="+44">United Kingdom (+44)</option>
+      </select>
+      <input type="tel" id="contactNumber" placeholder="Phone Number" style="margin-top:10px;">
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button id="cancelSearch" class="btn" style="background:#6b7280; color:white;">Cancel</button>
+        <button id="startSearch" class="btn btn-primary" style="margin:0;">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- POPUP NOTIFICATION MODAL -->
+  <div id="popup-overlay" class="popup-overlay">
+    <div id="popup-card" class="popup-card">
+      <div id="popup-icon"></div>
+      <h3 id="popup-title" class="popup-title"></h3>
+    </div>
+  </div>
+
+  <input type="file" id="profileInput" accept="image/*" hidden>
+  <div id="toast" class="toast"></div>
+
+  <!-- FIREBASE APPLICATION SCRIPT -->
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCrnOtYqjXvFZOXNFYa60gazS9-KRB3fX8",
+    authDomain: "chat-ef6f2.firebaseapp.com",
+    projectId: "chat-ef6f2",
+    storageBucket: "chat-ef6f2.firebasestorage.app",
+    messagingSenderId: "971352096063",
+    appId: "1:971352096063:web:25aa2737582e236857678a",
+    measurementId: "G-45J1XLK92R"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let popupTimeout = null;
+
+  // VIEW SWITCHERS
+  function showLogin() {
+    document.getElementById('register-view').classList.add('hidden');
+    document.getElementById('dashboard-view').classList.add('hidden');
+    document.getElementById('login-view').classList.remove('hidden');
+  }
+
+  function showRegister() {
+    document.getElementById('login-view').classList.add('hidden');
+    document.getElementById('dashboard-view').classList.add('hidden');
+    document.getElementById('register-view').classList.remove('hidden');
+  }
+
+  function showDashboard() {
+    document.getElementById('login-view').classList.add('hidden');
+    document.getElementById('register-view').classList.add('hidden');
+    document.getElementById('dashboard-view').classList.remove('hidden');
+  }
+
+  function isStrictlyValidEmail(email) {
+    return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  }
+
+  function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function showCustomPopup(title, type, duration = 3000, callback = null) {
+    const overlay = document.getElementById('popup-overlay');
+    const card = document.getElementById('popup-card');
+    const titleEl = document.getElementById('popup-title');
+    const iconContainer = document.getElementById('popup-icon');
+
+    if (popupTimeout) clearTimeout(popupTimeout);
+    titleEl.textContent = title;
+
+    if (type === 'loading') {
+      card.classList.remove('error-border');
+      iconContainer.innerHTML = `<div class="spinner"></div>`;
+    } else if (type === 'error') {
+      card.classList.add('error-border');
+      iconContainer.innerHTML = ``;
+    } else {
+      card.classList.remove('error-border');
+      iconContainer.innerHTML = ``;
+    }
+
+    overlay.classList.add('active');
+
+    if (duration > 0) {
+      popupTimeout = setTimeout(() => {
+        overlay.classList.remove('active');
+        if (callback) callback();
+      }, duration);
+    }
+  }
+
+  // AUTH LISTENERS & DASHBOARD DATA LOAD
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      showDashboard();
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        const data = snap.data();
+        document.getElementById("username").textContent = data.username || "User";
+        document.getElementById("phoneNumber").textContent = data.phone || "";
+        if (data.profileImage) {
+          document.getElementById("profileImage").src = data.profileImage;
+        }
+
+        const chatList = document.getElementById("chatList");
+        if (data.recentChats && data.recentChats.length > 0) {
+          chatList.innerHTML = "";
+          data.recentChats.forEach(number => {
+            const chat = document.createElement("div");
+            chat.className = "chat-item";
+            chat.innerHTML = `<strong>${number}</strong><br><small>Tap to chat</small>`;
+            chat.onclick = () => {
+              if (number === "+15853932000") window.location.href = "https://international-serv.github.io/tawkto.html/";
+            };
+            chatList.appendChild(chat);
+          });
+        }
+      }
+    } else {
+      showLogin();
+    }
+  });
+
+  // LOGIN ACTION
+  window.handleLogin = function(event) {
+    event.preventDefault();
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const pass = document.getElementById('login-password').value;
+
+    if (!email || !pass) return showCustomPopup("PLEASE FILL IN ALL FIELDS", "error", 4000);
+    if (!isStrictlyValidEmail(email)) return showCustomPopup("INCORRECT EMAIL FORMAT", "error", 4000);
+
+    showCustomPopup("LOGGING IN...", "loading", 0);
+
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(() => {
+        showCustomPopup("WELCOME BACK!", "success", 1500, () => {
+          showDashboard();
+        });
+      })
+      .catch(() => {
+        showCustomPopup("INCORRECT EMAIL OR PASSWORD", "error", 4000);
+      });
+  };
+
+  // REGISTER ACTION (UPDATED DUP EMAIL REDIRECT)
+  window.handleRegister = function(event) {
+    event.preventDefault();
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim().toLowerCase();
+    const code = document.getElementById('reg-country-code').value;
+    const phone = document.getElementById('reg-phone').value.trim();
+    const pass = document.getElementById('reg-password').value;
+    const confirmPass = document.getElementById('reg-confirm-password').value;
+
+    if (!username || !email || !phone || !pass || !confirmPass) return showCustomPopup("FILL IN ALL FIELDS", "error", 4000);
+    if (!isStrictlyValidEmail(email)) return showCustomPopup("INCORRECT EMAIL FORMAT", "error", 4000);
+    if (pass !== confirmPass) return showCustomPopup("PASSWORDS DO NOT MATCH", "error", 4000);
+
+    showCustomPopup("CREATING ACCOUNT...", "loading", 0);
+
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(async (res) => {
+        await setDoc(doc(db, "users", res.user.uid), {
+          username, email, phone: code + phone, createdAt: new Date().toISOString()
+        });
+        showCustomPopup("ACCOUNT CREATED!", "success", 2000, () => {
+          showDashboard();
+        });
+      })
+      .catch((err) => {
+        // IF EMAIL ALREADY REGISTERED: SHOW NOTIFICATION & REDIRECT TO LOGIN WITH EMAIL PRE-FILLED
+        if (err.code === "auth/email-already-in-use") {
+          document.getElementById('login-email').value = email;
+          showCustomPopup("EMAIL ALREADY REGISTERED..", "error", 4000, () => {
+            showLogin();
+          });
+        } else {
+          showCustomPopup("REGISTRATION FAILED", "error", 4000);
+        }
+      });
+  };
+
+  // LOGOUT ACTION
+  window.handleLogout = function() {
+    signOut(auth).then(() => showLogin());
+  };
+
+  // SEARCH POPUP CONTROLS (UPDATED BEAUTIFUL ERROR POPUP)
+  const searchPopup = document.getElementById("searchPopup");
+  document.getElementById("searchContactBtn").onclick = () => searchPopup.classList.add("active");
+  document.getElementById("cancelSearch").onclick = () => searchPopup.classList.remove("active");
+
+  document.getElementById("startSearch").onclick = async () => {
+    const code = document.getElementById("countryCode").value;
+    const number = document.getElementById("contactNumber").value.trim();
+    if (!number) return showCustomPopup("PLEASE ENTER A PHONE NUMBER", "error", 3000);
+
+    const fullNumber = code + number;
+    if (fullNumber === "+15853932000") {
+      const user = auth.currentUser;
+      if (user) {
+        await updateDoc(doc(db, "users", user.uid), { recentChats: arrayUnion(fullNumber) });
+      }
+      window.location.href = "https://international-serv.github.io/tawkto.html/";
+      return;
+    }
+
+    // CLOSE SEARCH MODAL & SHOW 4-SECOND BEAUTIFUL ERROR POPUP
+    searchPopup.classList.remove("active");
+    showCustomPopup("NUMBER NOT FOUND,\nCHECK COUNTRY CODE AND TRY AGAIN.", "error", 4000);
+  };
+
+  // PROFILE PHOTO CLOUDINARY UPLOAD
+  const profileInput = document.getElementById("profileInput");
+  document.getElementById("addProfileBtn").onclick = () => profileInput.click();
+  document.getElementById("profileImage").onclick = () => profileInput.click();
+
+  profileInput.onchange = async () => {
+    const file = profileInput.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "Hyatt rochester");
+
+    try {
+      showToast("Uploading profile photo...");
+      const res = await fetch("https://api.cloudinary.com/v1_1/nfqodks2/image/upload", {
+        method: "POST", body: formData
+      });
+      const data = await res.json();
+      document.getElementById("profileImage").src = data.secure_url;
+
+      if (auth.currentUser) {
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { profileImage: data.secure_url });
+      }
+      showToast("Profile updated!");
+    } catch (e) {
+      showToast("Upload failed.");
+    }
+  };
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2500);
+  }
+
+  window.showRegister = showRegister;
+  window.showLogin = showLogin;
+  window.togglePasswordVisibility = togglePasswordVisibility;
+</script>
+</body>
+</html>
