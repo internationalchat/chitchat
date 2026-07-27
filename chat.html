@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat Dashboard</title>
+    <style>
+        /* Reset and Viewport Lock */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #0d1117;
+            font-family: 'Times New Roman', Times, serif;
+            overflow: hidden;
+        }
+
+        /* Flexbox Stack to handle perfect screen fitting */
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Dark Blended Header Frame */
+        header {
+            background: linear-gradient(135deg, #0d1b2a, #1b263b, #203a43); /* Smooth dark blending tones */
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 99999;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Left Side Layout */
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        /* Back Button */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #e0e6ed;
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .back-btn:hover {
+            background-color: #ffffff;
+            color: #0d1b2a;
+        }
+
+        /* Profile Layout Row */
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Interactive Profile Picture Container */
+        .profile-avatar-wrapper {
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar {
+            width: 44px;
+            height: 44px;
+            background-color: #212e3d;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            overflow: hidden;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .profile-avatar-wrapper:hover .profile-avatar {
+            border-color: #4cc9f0;
+            transform: scale(1.03);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Text Block Stack */
+        .chat-meta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.25;
+        }
+
+        .chat-phone {
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+
+        .chat-status {
+            font-size: 12px;
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Right Side Layout */
+        .header-right {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        /* Icon Utility Buttons */
+        .icon-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+            padding: 4px;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.15);
+        }
+
+        /* Status alerts */
+        .status-alert {
+            font-size: 12px;
+            font-weight: bold;
+            color: #4cc9f0;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(76, 201, 240, 0.3);
+            animation: flash 1s infinite alternate;
+        }
+
+        @keyframes flash {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+
+        /* Native Chat Display Container */
+        .chat-frame-container {
+            flex: 1;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+
+        .chat-frame-container iframe {
+            position: absolute;
+            top: -45px; 
+            left: 0;
+            width: 100%;
+            height: calc(100% + 45px); 
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                ← Back
+            </button>
+            
+            <div class="profile-row">
+                <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar">
+                        <img id="avatarImage"
+                             src="https://i.postimg.cc/rw3H8CwT/IMG-20251218-WA0011.jpg"
+                             alt="Profile Picture">
+                    </div>
+                </div>
+
+                <div class="chat-meta">
+                    <span class="chat-phone">+1 585 -393 -2000</span>
+                    <span class="chat-status" id="statusText">online</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <div class="action-icons" id="actionsWrapper">
+                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
+                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="chat-frame-container">
+        <iframe src="https://tawk.to/chat/6a1d5cab08ce291c2c0010c1/1jq1b4074"></iframe>
+    </div>
+
+    <script>
+        // Live Preview Uploaded Picture
+        function previewProfilePicture(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Online Activity Lifecycle Logic
+        setTimeout(() => {
+            const statusText = document.getElementById('statusText');
+            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            statusText.innerText = `last seen ${currentTime}`;
+        }, 6000);
+
+        // Helper to swap icons out for alert text temporarily
+        function triggerStatusAlert(message, duration, callback) {
+            const wrapper = document.getElementById('actionsWrapper');
+            const originalContent = wrapper.innerHTML;
+            
+            wrapper.innerHTML = `<span class="status-alert">${message}</span>`;
+            
+            setTimeout(() => {
+                if (callback) {
+                    callback();
+                } else {
+                    wrapper.innerHTML = originalContent;
+                }
+            }, duration);
+        }
+
+        // Video Action Routine
+        function startVideo() {
+            triggerStatusAlert("CONNECTING...", 4000, () => {
+                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
+                    restoreIcons();
+                });
+            });
+        }
+
+        // Call Action Routine
+        function startCall() {
+            triggerStatusAlert("CALLING...", 4000, () => {
+                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
+                    restoreIcons();
+                });
+            });
+        }
+
+        // Function to rebuild normal icon states
+        function restoreIcons() {
+            document.getElementById('actionsWrapper').innerHTML = `
+                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
+                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+            `;
+        }
+    </script>
+
+</body>
+</html>
