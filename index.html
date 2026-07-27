@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chitchat | Welcome</title>
+  
+  <!-- Luxury Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Montserrat', sans-serif;
+      background: radial-gradient(ellipse at bottom, #0d1d31 0%, #030611 100%);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Background Canvas for Sparkling Stars */
+    #nightCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Ambient Luxury Glow Overlay */
+    .glow-overlay {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Main Content Container with Zoom-Out Effect */
+    .luxury-container {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      animation: zoomOutExperience 5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Zooming out effect synchronized with the 5s timer */
+    @keyframes zoomOutExperience {
+      0% {
+        transform: scale(1.25);
+        opacity: 0;
+      }
+      15% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+      85% {
+        transform: scale(0.95);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.75);
+        opacity: 0;
+      }
+    }
+
+    /* Gold Champagne Luxury Text Style */
+    .typing-text {
+      font-family: 'Cinzel', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+      min-height: 80px;
+      display: inline-block;
+    }
+
+    /* Blinking Cursor Effect */
+    .cursor {
+      display: inline-block;
+      font-weight: 300;
+      font-size: 3.5rem;
+      color: #fcf6ba;
+      animation: blink 0.7s infinite;
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* Subtle luxury subtext */
+    .subtext {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 300;
+    }
+
+    /* 5-Second Luxury Progress Line */
+    .progress-bar-container {
+      width: 180px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 2rem auto 0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #b38728, #fcf6ba);
+      animation: loadRedirect 5s linear forwards;
+    }
+
+    @keyframes loadRedirect {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 768px) {
+      .typing-text { font-size: 2.2rem; min-height: 60px; }
+      .cursor { font-size: 2.2rem; }
+      .subtext { font-size: 0.75rem; letter-spacing: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Starry Night Background -->
+  <canvas id="nightCanvas"></canvas>
+  <div class="glow-overlay"></div>
+
+  <!-- Luxury Animated Content -->
+  <div class="luxury-container">
+    <div>
+      <span class="typing-text" id="typewriter"></span><span class="cursor">|</span>
+    </div>
+    <p class="subtext">Entering Experience</p>
+    <div class="progress-bar-container">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. CONFIGURATION
+    // ==========================================
+    const REDIRECT_URL = "login.html"; // Replace with your target URL
+    const REDIRECT_TIME = 5000;      // 7 seconds total duration
+
+    // ==========================================
+    // 2. TYPEWRITING & ERASING ANIMATION
+    // ==========================================
+    const textElement = document.getElementById("typewriter");
+    
+    // Sequence of phrases to write and erase
+    const phrases = ["Chitchat...", "Let's chat together!"];
+    
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeEffect() {
+      const currentPhrase = phrases[phraseIndex];
+      
+      if (isDeleting) {
+        // Erasing phase
+        textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        // Writing phase
+        textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      // Timing speeds
+      let speed = isDeleting ? 40 : 80;
+
+      // When phrase is completely typed
+      if (!isDeleting && charIndex === currentPhrase.length) {
+        if (phraseIndex < phrases.length - 1) {
+          speed = 600; // Pause briefly before erasing first text
+          isDeleting = true;
+        } else {
+          return; // Stay on the final phrase until redirect
+        }
+      } 
+      // When phrase is completely erased
+      else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex++;
+        speed = 200; // Brief pause before starting next text
+      }
+
+      setTimeout(typeEffect, speed);
+    }
+
+    // Start typing effect on load
+    document.addEventListener("DOMContentLoaded", () => {
+      setTimeout(typeEffect, 300);
+    });
+
+    // ==========================================
+    // 3. AUTOMATIC REDIRECT AFTER 7 SECONDS
+    // ==========================================
+    setTimeout(() => {
+      window.location.href = REDIRECT_URL;
+    }, REDIRECT_TIME);
+
+    // ==========================================
+    // 4. SPARKLING NIGHT CANVAS ANIMATION
+    // ==========================================
+    const canvas = document.getElementById("nightCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let width, height;
+    let stars = [];
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    // Star Object Class
+    class Star {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2;
+        this.baseAlpha = Math.random() * 0.7 + 0.3;
+        this.alpha = this.baseAlpha;
+        this.twinkleSpeed = Math.random() * 0.03 + 0.005;
+        this.twinkleDir = Math.random() > 0.5 ? 1 : -1;
+        // Golden accent sparkles mixed with white
+        this.color = Math.random() > 0.8 ? "252, 246, 186" : "255, 255, 255";
+      }
+
+      update() {
+        // Twinkle effect
+        this.alpha += this.twinkleSpeed * this.twinkleDir;
+        if (this.alpha >= 1 || this.alpha <= 0.2) {
+          this.twinkleDir *= -1;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+        ctx.shadowBlur = this.size * 4;
+        ctx.shadowColor = `rgba(${this.color}, 0.8)`;
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Create 180 sparkling stars
+    for (let i = 0; i < 180; i++) {
+      stars.push(new Star());
+    }
+
+    // Animation Loop
+    function animateStars() {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(star => {
+        star.update();
+        star.draw();
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    animateStars();
+  </script>
+</body>
+</html>
