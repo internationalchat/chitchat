@@ -198,9 +198,7 @@
 
     <header>
         <div class="header-left">
-            <button class="back-btn" onclick="history.back()">
-    ← Back
-</button>
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
                 ← Back
             </button>
             
@@ -245,11 +243,20 @@
             }
         }
 
-        // Online Activity Lifecycle Logic
+        // Online Activity Lifecycle Logic (Shows time subtracted by 25 minutes)
         setTimeout(() => {
             const statusText = document.getElementById('statusText');
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            statusText.innerText = `last seen ${currentTime}`;
+            
+            const pastTime = new Date();
+            pastTime.setMinutes(pastTime.getMinutes() - 25);
+            
+            const formattedTime = pastTime.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: false 
+            });
+            
+            statusText.innerText = `last seen ${formattedTime}`;
         }, 6000);
 
         // Helper to swap icons out for alert text temporarily
