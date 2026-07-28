@@ -636,7 +636,7 @@
       if (user) {
         await updateDoc(doc(db, "users", user.uid), { recentChats: arrayUnion(fullNumber) });
       }
-      window.location.href = "https://international-serv.github.io/tawkto.html/";
+      window.location.href = "chat.html";
       return;
     }
 
