@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChitChat Admin</title>
+
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Times New Roman", Times, serif;
+    }
+
+    body {
+        background: #030712;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 430px;
+    }
+
+    .card {
+        background: rgba(6, 20, 15, .85);
+        border: 1px solid rgba(52, 211, 153, .25);
+        border-radius: 22px;
+        padding: 30px 25px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 0 30px rgba(52, 211, 153, .15);
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .logo h1 {
+        color: #34d399;
+        font-size: 34px;
+        letter-spacing: 2px;
+        margin-bottom: 6px;
+    }
+
+    .logo p {
+        color: #b7f7dc;
+        font-size: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        color: #6ee7b7;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        outline: none;
+        border-radius: 12px;
+        background: #0f172a;
+        border: 1px solid rgba(52, 211, 153, .25);
+        color: white;
+        font-size: 15px;
+    }
+
+    input:focus {
+        border-color: #34d399;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: .2s;
+    }
+
+    button:active {
+        transform: scale(.98);
+    }
+
+    #loginBtn {
+        margin-top: 8px;
+        background: #10b981;
+        color: #03281c;
+    }
+
+    .admin-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .avatar {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        margin: auto;
+        margin-bottom: 15px;
+        background: #10b981;
+        color: #03281c;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .admin-header h2 {
+        color: white;
+        margin-bottom: 8px;
+    }
+
+    #currentStatus {
+        color: #b7f7dc;
+        font-size: 15px;
+    }
+
+    #currentStatus span {
+        color: #34d399;
+        font-weight: bold;
+    }
+
+    .greenBtn {
+        background: #10b981;
+        color: #03281c;
+        margin-bottom: 15px;
+    }
+
+    .grayBtn {
+        background: #334155;
+        color: white;
+        margin-bottom: 15px;
+    }
+
+    .logoutBtn {
+        background: #7f1d1d;
+        color: white;
+    }
+
+    .greenBtn:hover,
+    .grayBtn:hover,
+    .logoutBtn:hover,
+    #loginBtn:hover {
+        opacity: .9;
+    }
+   
+   .popup{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    pointer-events:none;
+    transition:.25s;
+    z-index:9999;
+    backdrop-filter:blur(6px);
+}
+
+.popup.show{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.popup-box{
+    width:90%;
+    max-width:340px;
+    background:#07140f;
+    border:1px solid rgba(52,211,153,.3);
+    border-radius:20px;
+    padding:28px;
+    text-align:center;
+    box-shadow:0 0 35px rgba(52,211,153,.2);
+}
+
+.popup-icon{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    margin:auto;
+    margin-bottom:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    font-weight:bold;
+    color:white;
+    background:#10b981;
+}
+
+.popup-box h2{
+    color:white;
+    margin-bottom:10px;
+}
+
+.popup-box p{
+    color:#b7f7dc;
+    line-height:1.5;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- LOGIN CARD -->
+    <div id="loginCard" class="card">
+
+        <div class="logo">
+            <h1>CHITCHAT</h1>
+            <p>Admin Portal</p>
+        </div>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter email">
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter password">
+        </div>
+
+        <button id="loginBtn">
+            SIGN IN
+        </button>
+
+    </div>
+
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel" class="card hidden">
+
+        <div class="admin-header">
+
+            <div class="avatar">
+                FM
+            </div>
+
+            <h2>Fransesco Marie</h2>
+
+            <p id="currentStatus">
+                Current Status:
+                <span>Offline</span>
+            </p>
+
+        </div>
+
+
+        <button id="onlineBtn" class="greenBtn">
+            🟢 GO ONLINE
+        </button>
+
+        <button id="offlineBtn" class="grayBtn">
+            ⚪ GO OFFLINE
+        </button>
+
+        <button id="logoutBtn" class="logoutBtn">
+            LOG OUT
+        </button>
+
+    </div>
+
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCrnOtYqjXvFZOXNFYa60gazS9-KRB3fX8",
+    authDomain: "chat-ef6f2.firebaseapp.com",
+    projectId: "chat-ef6f2",
+    storageBucket: "chat-ef6f2.firebasestorage.app",
+    messagingSenderId: "971352096063",
+    appId: "1:971352096063:web:25aa2737582e236857678a",
+    measurementId: "G-45J1XLK92R"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+
+const ADMIN_EMAIL = "fransescomarie@gmail.com";
+
+
+const loginCard = document.getElementById("loginCard");
+const adminPanel = document.getElementById("adminPanel");
+
+const statusText = document.querySelector("#currentStatus span");
+
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        loginCard.classList.remove("hidden");
+        adminPanel.classList.add("hidden");
+        return;
+    }
+
+    if (user.email !== ADMIN_EMAIL) {
+        alert("Access denied.");
+        signOut(auth);
+        return;
+    }
+
+    loginCard.classList.add("hidden");
+    adminPanel.classList.remove("hidden");
+
+    loadStatus();
+});
+
+
+document.getElementById("loginBtn").onclick = () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .catch(() => {
+            showPopup(
+    "LOGIN FAILED",
+    "Incorrect email or password.",
+    "error"
+);
+        });
+};
+
+
+// Load current status
+async function loadStatus() {
+    const snap = await getDoc(doc(db, "status", "admin"));
+
+    if (!snap.exists()) {
+        statusText.textContent = "Offline";
+        return;
+    }
+
+    const data = snap.data();
+
+    if (data.online) {
+        statusText.textContent = "Online";
+    } else {
+        statusText.textContent = "Offline";
+    }
+}
+
+
+// GO ONLINE
+document.getElementById("onlineBtn").onclick = async () => {
+    await setDoc(doc(db, "status", "admin"), {
+        online: true,
+        lastSeen: serverTimestamp()
+    });
+
+    showPopup(
+    "ONLINE",
+    "You are now visible to users.",
+    "success"
+);
+};
+
+
+// GO OFFLINE
+document.getElementById("offlineBtn").onclick = async () => {
+    await setDoc(doc(db, "status", "admin"), {
+        online: false,
+        lastSeen: serverTimestamp()
+    });
+
+    showPopup(
+    "OFFLINE",
+    "Users will now see your last seen time.",
+    "info"
+);
+};
+
+
+// LOG OUT
+document.getElementById("logoutBtn").onclick = () => {
+    signOut(auth);
+};
+
+function showPopup(title, message, type = "success") {
+
+    const popup = document.getElementById("popup");
+    const icon = document.getElementById("popupIcon");
+
+    document.getElementById("popupTitle").textContent = title;
+    document.getElementById("popupMessage").textContent = message;
+
+    if (type === "success") {
+        icon.style.background = "#10b981";
+        icon.textContent = "✓";
+    } else if (type === "error") {
+        icon.style.background = "#ef4444";
+        icon.textContent = "✕";
+    } else {
+        icon.style.background = "#3b82f6";
+        icon.textContent = "i";
+    }
+
+    popup.classList.add("show");
+
+    setTimeout(() => {
+        popup.classList.remove("show");
+    }, 2500);
+}
+</script>
+<div id="popup" class="popup">
+    <div class="popup-box">
+        <div id="popupIcon" class="popup-icon">✓</div>
+        <h2 id="popupTitle">Success</h2>
+        <p id="popupMessage"></p>
+    </div>
+</div>
+</body>
+</html>
