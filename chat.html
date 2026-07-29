@@ -24,7 +24,7 @@
 
         /* Dark Blended Header Frame */
         header {
-            background: linear-gradient(135deg, #0d1b2a, #1b263b, #203a43); /* Smooth dark blending tones */
+            background: linear-gradient(135deg, #0d1b2a, #1b263b, #203a43);
             color: white;
             padding: 12px 15px;
             display: flex;
@@ -198,10 +198,9 @@
 
     <header>
         <div class="header-left">
-         <button class="back-btn"
-onclick="window.location.href='dashboard.html'">
-    ← Back
-</button>
+            <button class="back-btn" onclick="window.location.href='dashboard.html'">
+                ← Back
+            </button>
             
             <div class="profile-row">
                 <div class="profile-avatar-wrapper">
@@ -214,8 +213,8 @@ onclick="window.location.href='dashboard.html'">
 
                 <div class="chat-meta">
                     <span class="chat-phone">+1 585 -393 -2000</span>
-                    <span class="chat-status" id="statusText">online</span>
-                </div>
+                    <span class="chat-status" id="statusText">Loading...</span>
+                </div>  
             </div>
         </div>
 
@@ -231,25 +230,48 @@ onclick="window.location.href='dashboard.html'">
         <iframe src="https://tawk.to/chat/6a1d5cab08ce291c2c0010c1/1jq1b4074"></iframe>
     </div>
 
-    <script>
-        // Live Preview Uploaded Picture
-        function previewProfilePicture(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('avatarImage').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-        // Online Activity Lifecycle Logic
-        setTimeout(() => {
-            const statusText = document.getElementById('statusText');
-            const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            statusText.innerText = `last seen ${currentTime}`;
-        }, 6000);
+        const firebaseConfig = {
+            apiKey: "AIzaSyCrnOtYqjXvFZOXNFYa60gazS9-KRB3fX8",
+            authDomain: "chat-ef6f2.firebaseapp.com",
+            projectId: "chat-ef6f2",
+            storageBucket: "chat-ef6f2.firebasestorage.app",
+            messagingSenderId: "971352096063",
+            appId: "1:971352096063:web:25aa2737582e236857678a",
+            measurementId: "G-45J1XLK92R"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const statusText = document.getElementById("statusText");
+
+        // Auth & Live Status Listener
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+
+            onSnapshot(doc(db, "status", "admin"), (snap) => {
+                if (!snap.exists()) {
+                    statusText.textContent = "Offline";
+                    return;
+                }
+
+                const data = snap.data();
+                if (data.online) {
+                    statusText.textContent = "Online";
+                } else {
+                    statusText.textContent = "Offline";
+                }
+            });
+        });
 
         // Helper to swap icons out for alert text temporarily
         function triggerStatusAlert(message, duration, callback) {
@@ -267,31 +289,44 @@ onclick="window.location.href='dashboard.html'">
             }, duration);
         }
 
-        // Video Action Routine
-        function startVideo() {
+        // Rebuild normal icon states
+        function restoreIcons() {
+            const wrapper = document.getElementById("actionsWrapper");
+            if (wrapper) {
+                wrapper.innerHTML = `
+                    <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
+                    <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+                `;
+            }
+        }
+
+        // Attach function handlers to window scope for inline onclick attributes
+        window.startVideo = function() {
             triggerStatusAlert("CONNECTING...", 4000, () => {
                 triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
                     restoreIcons();
                 });
             });
-        }
+        };
 
-        // Call Action Routine
-        function startCall() {
+        window.startCall = function() {
             triggerStatusAlert("CALLING...", 4000, () => {
                 triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
                     restoreIcons();
                 });
             });
-        }
+        };
 
-        // Function to rebuild normal icon states
-        function restoreIcons() {
-            document.getElementById('actionsWrapper').innerHTML = `
-                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
-                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
-            `;
-        }
+        window.previewProfilePicture = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('avatarImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
     </script>
 
 </body>
