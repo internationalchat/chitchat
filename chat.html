@@ -265,11 +265,21 @@
                 }
 
                 const data = snap.data();
-                if (data.online) {
-                    statusText.textContent = "Online";
-                } else {
-                    statusText.textContent = "Offline";
-                }
+
+if (data.online) {
+    statusText.textContent = "Online";
+} else {
+    if (data.lastSeen) {
+        const lastSeen = data.lastSeen.toDate();
+statusText.textContent = "Last seen " + lastSeen.toLocaleString();
+
+        statusText.textContent =
+            "Last seen " + lastSeen.toLocaleString();
+    } else {
+        statusText.textContent = "Offline";
+    }
+}
+        
             });
         });
 
