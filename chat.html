@@ -270,11 +270,50 @@ if (data.online) {
     statusText.textContent = "Online";
 } else {
     if (data.lastSeen) {
-        const lastSeen = data.lastSeen.toDate();
-statusText.textContent = "Last seen " + lastSeen.toLocaleString();
 
-        statusText.textContent =
-            "Last seen " + lastSeen.toLocaleString();
+       const lastSeen = data.lastSeen.toDate();
+
+const lastSeenTime = lastSeen.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+});
+
+const today = new Date();
+const startToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+const startLastSeen = new Date(
+    lastSeen.getFullYear(),
+    lastSeen.getMonth(),
+    lastSeen.getDate()
+);
+
+const diffDays = Math.floor(
+    (startToday - startLastSeen) / (1000 * 60 * 60 * 24)
+);
+
+if (diffDays === 0) {
+    statusText.textContent = `Last seen today at ${lastSeenTime}`;
+} else if (diffDays === 1) {
+    statusText.textContent = `Last seen yesterday at ${lastSeenTime}`;
+} else {
+    statusText.textContent =
+        `Last seen ${lastSeen.toLocaleDateString()} at ${lastSeenTime}`;
+}
+
+const time = lastSeen.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit"
+});
+
+if (diffDays === 0) {
+    statusText.textContent = `Last seen today at ${time}`;
+} else if (diffDays === 1) {
+    statusText.textContent = `Last seen yesterday at ${time}`;
+} else {
+    statusText.textContent = `Last seen ${lastSeen.toLocaleDateString()} at ${time}`;
+}
+
+        
     } else {
         statusText.textContent = "Offline";
     }
