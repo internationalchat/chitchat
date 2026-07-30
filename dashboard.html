@@ -540,14 +540,36 @@
         if (data.recentChats && data.recentChats.length > 0) {
           chatList.innerHTML = "";
           data.recentChats.forEach(number => {
-            const chat = document.createElement("div");
-            chat.className = "chat-item";
-            chat.innerHTML = `<strong>${number}</strong><br><small>Tap to chat</small>`;
-            chat.onclick = () => {
-              if (number === "+15853932000") window.location.href = "chat.html";
-            };
-            chatList.appendChild(chat);
-          });
+           
+           const chat = document.createElement("div");
+chat.className = "chat-item";
+
+chat.innerHTML = `
+<div style="display:flex;align-items:center;justify-content:space-between;">
+    
+    <div style="display:flex;align-items:center;">
+        <img src="https://i.postimg.cc/hPc9zPMw/IMG-20251218-WA0011.jpg"
+             style="width:55px;height:55px;border-radius:50%;object-fit:cover;margin-right:15px;">
+
+        <div>
+            <strong style="font-size:18px;color:#fff;">${number}</strong><br>
+            <small style="color:#bdbdbd;">Tap to continue chatting</small>
+        </div>
+    </div>
+
+    <small style="color:#888;">
+        ${new Date().toLocaleDateString()}
+    </small>
+
+</div>
+`;
+
+chat.onclick = () => {
+    window.location.href = "chitchat.html";
+};
+
+chatList.appendChild(chat);
+                     });
         }
       }
     } else {
