@@ -220,8 +220,8 @@
 
         <div class="header-right">
             <div class="action-icons" id="actionsWrapper">
-                <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
-                <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+                <button class="icon-btn" onclick="window.location.href='videocall.html'" title="Video Call">📹</button>
+                <button class="icon-btn" id="callBtn" onclick="location.href='call.html'" title="Voice Call">📞</button>
             </div>
         </div>
     </header>
@@ -343,28 +343,19 @@ if (diffDays === 0) {
             const wrapper = document.getElementById("actionsWrapper");
             if (wrapper) {
                 wrapper.innerHTML = `
-                    <button class="icon-btn" id="videoBtn" onclick="startVideo()" title="Video Call">📹</button>
-                    <button class="icon-btn" id="callBtn" onclick="startCall()" title="Voice Call">📞</button>
+                   <button class="icon-btn" onclick="window.location.href='videocall.html'" title="Video Call">📹</button>
+                    <button class="icon-btn" id="callBtn" onclick="location.href='call.html'" title="Voice Call">📞</button>
                 `;
             }
         }
 
         // Attach function handlers to window scope for inline onclick attributes
-        window.startVideo = function() {
-            triggerStatusAlert("CONNECTING...", 4000, () => {
-                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
-                    restoreIcons();
-                });
-            });
-        };
+       
+window.startVideo = function() {
+    window.location.href = "videocall.html";
+};
 
-        window.startCall = function() {
-            triggerStatusAlert("CALLING...", 4000, () => {
-                triggerStatusAlert("FAILED TO CONNECT.", 3000, () => {
-                    restoreIcons();
-                });
-            });
-        };
+        
 
         window.previewProfilePicture = function(event) {
             const file = event.target.files[0];
